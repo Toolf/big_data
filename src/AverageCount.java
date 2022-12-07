@@ -22,7 +22,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 public class AverageCount {
 
-	public static class AverageCountMapper extends Mapper<Object, Text, Integer, Double>{
+	public static class AverageCountMapper extends Mapper<Object, Text, Text, Double>{
 
 		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			String csvLine = value.toString();
@@ -32,12 +32,12 @@ public class AverageCount {
 			LocalDate year1 = LocalDate.parse(csvField[0]);
 			LocalDate year2 = LocalDate.parse(csvField[0+8]);
 
-			context.write(Integer.valueOf(year1.getYear()), Double.parseDouble(csvField[2]));
-			context.write(Integer.valueOf(year2.getYear()), Double.parseDouble(csvField[2+8]));
+			context.write(new Text(year1.getYear()), Double.parseDouble(csvField[2]));
+			context.write(new Text(year2.getYear()), Double.parseDouble(csvField[2+8]));
 		}
 	 }
 
-	 public static class AverageCountReducer extends Reducer<Integer, Double, Integer, Double>{
+	 public static class AverageCountReducer extends Reducer<Text, Double, Text, Double>{
 		 
 		public void reduce(Integer key, Iterable<Double> values, Context context) throws IOException, InterruptedException {
 			 
@@ -72,7 +72,7 @@ public class AverageCount {
 		job.setMapperClass(AverageCountMapper.class);
 		job.setCombinerClass(AverageCountReducer.class);
 		job.setReducerClass(AverageCountReducer.class);
-		job.setOutputKeyClass(Integer.class);
+		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(Double.class);
 
 		for (int i = 1; i < otherArgs.length - 1; i++) {
