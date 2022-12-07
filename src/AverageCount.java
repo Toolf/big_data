@@ -33,7 +33,7 @@ public class AverageCount {
 			LocalDate year2 = LocalDate.parse(csvField[0+8]);
 
 			context.write(new Text(String.valueOf(year1.getYear())), Double.parseDouble(csvField[2]));
-			context.write(new Text(String.valueOfyear2.getYear())), Double.parseDouble(csvField[2+8]));
+			context.write(new Text(String.valueOf(year2.getYear())), Double.parseDouble(csvField[2+8]));
 		}
 	 }
 
