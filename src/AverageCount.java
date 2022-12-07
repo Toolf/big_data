@@ -40,15 +40,15 @@ public class AverageCount {
 	 public static class AverageCountReducer extends Reducer<Text, Double, Text, Double>{
 		 
 		public void reduce(Text key, Iterable<Double> values, Context context) throws IOException, InterruptedException {
-			 
-			double minValue = values.iterator().next();
+			Double minValue = null;
 			for(Double value: values) {
-				if (minValue > value) {
+				if (minValue == null || minValue > value) {
 					minValue = value;
 				}
 			}
-
-			context.write(key, minValue);
+			if (minValue != null) {
+				context.write(key, minValue);
+			}
 		}
 
 	 }
