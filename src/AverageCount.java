@@ -40,7 +40,7 @@ public class AverageCount {
 
 	 public static class AverageCountReducer extends Reducer<Integer, Double, Integer, Double>{
 		 
-		public void reduce(IntWritable key, Iterable<Double> values, Context context) throws IOException, InterruptedException {
+		public void reduce(Integer key, Iterable<Double> values, Context context) throws IOException, InterruptedException {
 			 
 			double minValue = values.iterator().next();
 			for(Double value: values) {
