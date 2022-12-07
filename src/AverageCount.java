@@ -73,7 +73,7 @@ public class AverageCount {
 		job.setMapperClass(AverageCountMapper.class);
 		job.setCombinerClass(AverageCountReducer.class);
 		job.setReducerClass(AverageCountReducer.class);
-		job.setOutputKeyClass(IntWritable.class);
+		job.setOutputKeyClass(Integer.class);
 		job.setOutputValueClass(Double.class);
 		
 		for (int i = 1; i < otherArgs.length - 1; i++) {
