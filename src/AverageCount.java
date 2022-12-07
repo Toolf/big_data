@@ -23,7 +23,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 public class AverageCount {
 	
-	public static class AverageCountMapper extends Mapper<Object, Text, IntWritable, Double>{
+	public static class AverageCountMapper extends Mapper<Object, Text, Integer, Double>{
 				 
 		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			String csvLine = value.toString();
@@ -33,12 +33,12 @@ public class AverageCount {
 			LocalDate year1 = LocalDate.parse(csvField[0]);
 			LocalDate year2 = LocalDate.parse(csvField[0+8]);
 
-			context.write(new IntWritable(year1.getYear()), Double.parseDouble(csvField[2]));
-			context.write(new IntWritable(year2.getYear()), Double.parseDouble(csvField[2+8]));
+			context.write(year1.getYear(), Double.parseDouble(csvField[2]));
+			context.write(year2.getYear(), Double.parseDouble(csvField[2+8]));
 		}
 	 }
 
-	 public static class AverageCountReducer extends Reducer<IntWritable, Double, IntWritable, Double>{
+	 public static class AverageCountReducer extends Reducer<Integer, Double, Integer, Double>{
 		 
 		public void reduce(IntWritable key, Iterable<Double> values, Context context) throws IOException, InterruptedException {
 			 
