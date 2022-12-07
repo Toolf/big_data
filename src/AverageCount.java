@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -18,7 +17,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
-
+import org.apache.hadoop.io.Text;
 
 public class AverageCount {
 
@@ -31,7 +30,7 @@ public class AverageCount {
 			DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
 			LocalDate year1 = LocalDate.parse(csvField[0]);
 			LocalDate year2 = LocalDate.parse(csvField[0+8]);
-
+			System.out.println("year1: " + year1 + ", " + "year2:" + year2);
 			context.write(new Text(String.valueOf(year1.getYear())), Double.parseDouble(csvField[2]));
 			context.write(new Text(String.valueOf(year2.getYear())), Double.parseDouble(csvField[2+8]));
 		}
