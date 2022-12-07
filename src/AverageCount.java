@@ -22,7 +22,7 @@ import org.apache.hadoop.io.Text;
 public class AverageCount {
 
 	public static class AverageCountMapper extends Mapper<Object, Text, Text, Double>{
-
+		private Text year = new Text();
 		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			String csvLine = value.toString();
 			String[] csvField = csvLine.split(",");
@@ -31,8 +31,10 @@ public class AverageCount {
 			LocalDate year1 = LocalDate.parse(csvField[0]);
 			LocalDate year2 = LocalDate.parse(csvField[0+8]);
 			System.out.println("year1: " + year1 + ", " + "year2:" + year2);
-			context.write(new Text(String.valueOf(year1.getYear())), Double.parseDouble(csvField[2]));
-			context.write(new Text(String.valueOf(year2.getYear())), Double.parseDouble(csvField[2+8]));
+			year.set(new Text(String.valueOf(year1.getYear())));
+			context.write(year, Double.parseDouble(csvField[2]));
+			year.set(new Text(String.valueOf(year2.getYear())));
+			context.write(year, Double.parseDouble(csvField[2+8]));
 		}
 	 }
 
