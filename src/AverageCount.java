@@ -21,44 +21,48 @@ import org.apache.hadoop.io.Text;
 
 public class AverageCount {
 
-	public static class AverageCountMapper extends Mapper<Object, Text, Text, Double>{
+	public static class AverageCountMapper extends Mapper<Object, Text, Text, Double> {
 		private Text year = new Text();
-		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-			String csvLine = value.toString();
-			String[] csvField = csvLine.split(",");
-			
-			DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-			LocalDate year1 = LocalDate.parse(csvField[0]);
-			LocalDate year2 = LocalDate.parse(csvField[0+8]);
-			System.out.println("year1: " + year1 + ", " + "year2:" + year2);
-			year.set(new Text(String.valueOf(year1.getYear())));
-			context.write(year, Double.parseDouble(csvField[2]));
-			year.set(new Text(String.valueOf(year2.getYear())));
-			context.write(year, Double.parseDouble(csvField[2+8]));
-		}
-	 }
 
-	 public static class AverageCountReducer extends Reducer<Text, Double, Text, Double>{
-		 
-		public void reduce(Text key, Iterable<Double> values, Context context) throws IOException, InterruptedException {
-			for(Double value: values) {
+		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+			// String csvLine = value.toString();
+			// String[] csvField = csvLine.split(",");
+
+			// DateTimeFormatter dateTimeFormatter =
+			// DateTimeFormatter.ofPattern("yyyy.MM.dd");
+			// LocalDate year1 = LocalDate.parse(csvField[0]);
+			// LocalDate year2 = LocalDate.parse(csvField[0+8]);
+			// System.out.println("year1: " + year1 + ", " + "year2:" + year2);
+			// year.set(new Text(String.valueOf(year1.getYear())));
+			// context.write(year, Double.parseDouble(csvField[2]));
+			// year.set(new Text(String.valueOf(year2.getYear())));
+			// context.write(year, Double.parseDouble(csvField[2+8]));
+			context.write(value, 1.52);
+		}
+	}
+
+	public static class AverageCountReducer extends Reducer<Text, Double, Text, Double> {
+
+		public void reduce(Text key, Iterable<Double> values, Context context)
+				throws IOException, InterruptedException {
+			for (Double value : values) {
 				context.write(key, value);
 			}
-			
+
 			// Double minValue = null;
 			// for(Double value: values) {
-			// 	if (minValue == null || minValue > value) {
-			// 		minValue = value;
-			// 	}
+			// if (minValue == null || minValue > value) {
+			// minValue = value;
+			// }
 			// }
 			// if (minValue != null) {
-			// 	context.write(key, minValue);
+			// context.write(key, minValue);
 			// }
 		}
 
-	 }
+	}
 
-	 public static void main(String... args) throws Exception{
+	public static void main(String... args) throws Exception {
 
 		Configuration conf = new Configuration();
 		String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
@@ -67,9 +71,9 @@ public class AverageCount {
 			System.exit(2);
 		}
 
-		FileSystem hdfs=FileSystem.get(new URI(args[0]), conf);
-		Path resultFolder=new Path(args[2]);
-		if(hdfs.exists(resultFolder))
+		FileSystem hdfs = FileSystem.get(new URI(args[0]), conf);
+		Path resultFolder = new Path(args[2]);
+		if (hdfs.exists(resultFolder))
 			hdfs.delete(resultFolder, true);
 
 		Job job = Job.getInstance(conf, "Market Average Count");
@@ -89,6 +93,6 @@ public class AverageCount {
 		System.out.println("Job Running Time: " + (job.getFinishTime() - job.getStartTime()));
 
 		System.exit(finishState ? 0 : 1);
-	 }
+	}
 
 }
